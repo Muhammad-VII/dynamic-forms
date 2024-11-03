@@ -1,0 +1,5 @@
+[
+  { "label": "Name", "type": "text", "name": "name", "required": true },
+  { "label": "Email", "type": "email", "name": "email", "required": true },
+  { "label": "Age", "type": "number", "name": "age", "required": true }
+]

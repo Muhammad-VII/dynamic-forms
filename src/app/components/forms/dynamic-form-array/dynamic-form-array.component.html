@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div formArrayName="entries">
+    @for (entry of entries.controls; track $index; let i = $index) {
+    <div [formGroupName]="i">
+      <label>Entry {{ i + 1 }}</label>
+
+      @for (field of entryConfig(); track $index) {
+      <div>
+        <label [for]="field.name">{{ field.label }}</label>
+
+        <!-- Render input based on type -->
+        @if (field.type !== 'textarea') {
+        <input
+          [type]="field.type"
+          [formControlName]="field.name"
+          [id]="field.name"
+          [required]="field.required"
+          placeholder="Enter {{ field.label }}"
+        />
+        }
+
+        <!-- Render textarea if the type is textarea -->
+        @if (field.type === 'textarea') {
+        <textarea
+          [formControlName]="field.name"
+          [id]="field.name"
+          [required]="field.required"
+          placeholder="Enter {{ field.label }}"
+        ></textarea>
+        }
+
+        <!-- Display error if field is required and has not been filled -->
+        @if (entry.get(field.name)?.invalid && entry.get(field.name)?.touched) {
+        <div>
+          @if (entry.get(field.name)?.getError('required')) {
+          <small> {{ field.label }} is required. </small>
+          }
+        </div>
+        }
+      </div>
+      }
+
+      <!-- Remove button for each entry -->
+      <button type="button" (click)="removeEntry(i)">Remove Entry</button>
+    </div>
+    }
+  </div>
+
+  <!-- Add new entry button -->
+  <button type="button" (click)="addEntry()">Add Entry</button>
+
+  <button type="submit" [disabled]="form.invalid">Submit</button>
+</form>

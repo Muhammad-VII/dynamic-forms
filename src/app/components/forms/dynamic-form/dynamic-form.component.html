@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  @for (field of formConfig(); track $index) {
+
+  <div>
+    <label [for]="field.name">{{ field.label }}</label>
+
+    <!-- Render input based on type -->
+    @if (field.type !== 'textarea') {
+    <input
+      [type]="field.type"
+      [formControlName]="field.name"
+      [id]="field.name"
+      [required]="field.required"
+      placeholder="Enter {{ field.label }}"
+    />
+    }
+
+    <!-- Render textarea if the type is textarea -->
+    @if (field.type === 'textarea') {
+    <textarea
+      [formControlName]="field.name"
+      [id]="field.name"
+      [required]="field.required"
+      placeholder="Enter {{ field.label }}"
+    ></textarea>
+    }
+
+    <!-- Display error if field is required and has not been filled -->
+    @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
+    <div>
+      @if (form.get(field.name)?.getError('required')) {
+      <small> {{ field.label }} is required. </small>
+      }
+    </div>
+    }
+  </div>
+  }
+
+  <button type="submit" [disabled]="form.invalid">Submit</button>
+</form>
